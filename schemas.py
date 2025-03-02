@@ -23,19 +23,19 @@ class UserUpdate(BaseModel):
     email: Optional[EmailStr] = None
     age: Optional[int] = None
     city: Optional[str] = None
+    interests:Optional[List[str]]=None
 
 
 
 class MatchPreferences(BaseModel):
     min_age: Optional[int] = None
     max_age: Optional[int] = None
-    preferred_cities: Optional[List[str]] = None  #  Instead of distance, match users in specific cities
+    preferred_cities: Optional[List[str]] = None  
     interests: Optional[List[str]] = None
-    strict_interest_match: bool = False  # Default is False, no need for Optional
-    gender_preference: Optional[str] = "any"  # Default to "any" if not provided
+    strict_interest_match: bool = False  # Default is False,
+    gender_preference: Optional[str] = "any"  # Default "any" if not provided
 
- 
- 
+
 # Response Model (Includes ID)
 class User(UserBase):
     id: int
