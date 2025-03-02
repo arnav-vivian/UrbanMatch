@@ -23,6 +23,9 @@ The Marriage Matchmaking App is a simple backend application designed to help us
   - Ensures users are of the opposite gender.
   - Filters users within an age range of ±5 years.
   - Prioritizes matches with similar interests, sorting users based on the number of common interests.
+### **5. Email Validation**
+  - Added validation to ensure the email field in user profiles contains valid email addresses.
+  - Implemented this feature using the pylint library.
 
 ----------------------------**Additional Functionality (felt it might be needed based on project business value)**------------------------------------
 ### **4. Match Users Based on User Preferences**
