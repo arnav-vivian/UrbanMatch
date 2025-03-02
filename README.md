@@ -24,7 +24,7 @@ The Marriage Matchmaking App is a simple backend application designed to help us
   - Filters users within an age range of ±5 years.
   - Prioritizes matches with similar interests, sorting users based on the number of common interests.
 
---------------------------------------------------------Additional Functionality (felt it might be needed based on project business value)----------------------------------------------------------
+-------------------------------Additional Functionality (felt it might be needed based on project business value)----------------------------------------------
 ### **4. Match Users Based on User Preferences**
 **Endpoint:** `POST /users/{user_id}/matches`
 - Allows users to find matches based on specific preferences:
