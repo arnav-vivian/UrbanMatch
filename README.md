@@ -3,53 +3,36 @@
 ## Brief Description
 The Marriage Matchmaking App is a simple backend application designed to help users find potential matches based on their profile information. The app allows users to create, read, update, and delete profiles with details such as name, age, gender, email, city, and interests.
 
-## What is Provided?
-This project provides a basic skeleton for a FastAPI-based backend application. 
-#### Github repo: **https://github.com/abhishek-UM/UrbanMatch-PythonTask/tree/master**
+## **Implemented Features ---by Arnav Singh**
 
-The provided code includes:
+### **1. Update User (PATCH)**
+**Endpoint:** `PATCH /users/{user_id}`
+- Allows users to update their details while preserving existing data.
+- Supports partial updates to prevent overwriting unspecified fields.
+- Enhances the `interests` field to append new interests instead of overriding the existing list.
 
-### Basic Project Structure:
+### **2. Delete User (DELETE)**
+**Endpoint:** `DELETE /users/{user_id}`
+- Enables deletion of a user by their unique ID.
+- Implements error handling to return a `404 Not Found` response if the user does not exist.
 
-- **main.py** : The main application file with basic CRUD operations for user profiles.
-- **models.py**: SQLAlchemy models defining the User schema.
-- **database.py**: Database configuration and setup.
-- **schemas.py**: Pydantic schemas for data validation and serialization.
+### **3. Match Users Based on User Profile**
+**Endpoint:** `GET /users/{user_id}/potential-matches`
+- Fetches potential matches for a user based on predefined criteria:
+  - Matches users from the same city.
+  - Ensures users are of the opposite gender.
+  - Filters users within an age range of ±5 years.
+  - Prioritizes matches with similar interests, sorting users based on the number of common interests.
 
-### Functionality:
+--------------------------------------------------------Additional Functionality (felt it might be needed based on project business value)----------------------------------------------------------
+### **4. Match Users Based on User Preferences**
+**Endpoint:** `POST /users/{user_id}/matches`
+- Allows users to find matches based on specific preferences:
+  - Age range (min & max age restrictions).
+  - Gender preference (male, female, or any).
+  - City preference (users from selected cities).
+  - Strict interest match (matches users with at least one or all shared interests).
+  - Sorts results based on the number of shared interests to serve better profiles.  
 
-- Create User Endpoint: Create a new user profile.
-- Read Users Endpoint: Retrieve a list of user profiles.
-- Read User by ID Endpoint: Retrieve a user profile by ID.
-- SQLite Database: The application uses SQLite as the database to store user profiles.
+**End of Report**
 
-## What is Required?
-### Tasks:
-1. Add User Update Endpoint:
-   - Implement an endpoint to update user details by ID in the main.py file.
-2. Add User Deletion Endpoint:
-   - Implement an endpoint to delete a user profile by ID.
-3. Find Matches for a User:
-   - Implement an endpoint to find potential matches for a user based on their profile information.
-4. Add Email Validation:
-   - Add validation to ensure the email field in user profiles contains valid email addresses.
-  
-## Instructions:
-Implement the required endpoints and email validation:
-
-1. Add the necessary code for the update, delete, match and validation endpoints 
-2. Test Your Implementation:
-    1. Verify that users can be updated and deleted correctly.
-    2. Check that matches are correctly retrieved for a given user.
-    3. Ensure email validation is working as expected.
-
-## Submit Your Work:
-Provide the updated code files (main.py, models.py, database.py, and schemas.py).
-Include a brief report explaining your approach and any assumptions made.
-
-
-### Prerequisites
-- Python 3.7+
-- FastAPI
-- SQLAlchemy
-- SQLite
