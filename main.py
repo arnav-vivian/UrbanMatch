@@ -5,6 +5,8 @@ import models, schemas
 from models import User
 from schemas import MatchPreferences
 from typing import List
+from sqlalchemy import func, and_,select
+import models, schemas
 
 
 app = FastAPI()
@@ -115,18 +117,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     db.commit()
     return {"message": "User deleted successfully"}
 
-
-# Find Matches for a User
-# @app.get("/users/{user_id}/matches/", response_model=list[schemas.User])
-# def find_matches(user_id: int, db: Session = Depends(get_db)):
-#     user = db.query(models.User).filter(models.User.id == user_id).first()
-#     if user is None:
-#         raise HTTPException(status_code=404, detail="User not found")
-
-#     matches = db.query(models.User).filter(models.User.city == user.city, models.User.id != user_id).all()
-#     return matches
-
-
+# Find matches for a user based on the user prefrences
 @app.post("/users/{user_id}/matches", response_model=List[schemas.User])
 def find_matches(
     user_id: int,
@@ -171,3 +162,82 @@ def find_matches(
         raise HTTPException(status_code=404, detail="No matches found")
 
     return matches
+
+# Match users with a similar age range (±5 years).
+# Find users of the opposite gender (optional, remove if not needed).
+# Match users from the same city (for locality-based connections).
+# Prioritize users with overlapping interests using PostgreSQL && (array overlap).
+
+# @app.get("/users/{user_id}/potential-matches", response_model=List[schemas.User])
+# def find_potential_matches(user_id: int, db: Session = Depends(get_db)):
+#     # Fetch the current user
+#     user = db.query(models.User).filter(models.User.id == user_id).first()
+#     if not user:
+#         raise HTTPException(status_code=404, detail="User not found")
+
+#     # Step 1: Build query to filter potential matches in the database itself
+#     query = db.query(models.User).filter(models.User.id != user.id)
+
+#     if user.gender and user.gender.lower() in ["male", "female"]:
+#         opposite_gender = "male" if user.gender.lower() == "female" else "female"
+#         query = query.filter(models.User.gender.ilike(opposite_gender))
+
+#     if user.city:
+#         query = query.filter(models.User.city.ilike(user.city))
+
+#     if user.age:
+#         query = query.filter(models.User.age.between(user.age - 5, user.age + 5))
+
+#     # Fetch potential matches (already filtered)
+#     potential_matches = query.all()
+
+#     # Step 2: Prioritize interest-based matching
+   
+#     # Determine results based on priority order
+#     results = potential_matches
+
+#     if not results:
+#         raise HTTPException(status_code=404, detail="No potential matches found")
+
+#     return results
+
+
+
+@app.get("/users/{user_id}/potential-matches", response_model=List[schemas.User])
+def find_potential_matches(user_id: int, db: Session = Depends(get_db)):
+    # Fetch the current user
+    user = db.query(models.User).filter(models.User.id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+
+    # Step 1: Build query to filter potential matches in the database itself
+    query = db.query(models.User).filter(models.User.id != user.id)
+
+    if user.gender and user.gender.lower() in ["male", "female"]:
+        opposite_gender = "male" if user.gender.lower() == "female" else "female"
+        query = query.filter(models.User.gender.ilike(opposite_gender))
+
+    if user.city:
+        query = query.filter(models.User.city.ilike(user.city))
+
+    if user.age:
+        query = query.filter(models.User.age.between(user.age - 5, user.age + 5))
+
+    # Fetch potential matches (already filtered)
+    potential_matches = query.all()
+
+    # Step 2: Prioritize interest-based matching
+    if user.interests:
+        user_interests = set(user.interests)  # Assuming interests is a list field
+
+        def common_interest_count(match):
+            match_interests = set(match.interests) if match.interests else set()
+            return len(user_interests & match_interests)
+
+        # Sort potential matches by common interests in descending order
+        potential_matches.sort(key=common_interest_count, reverse=True)
+
+    if not potential_matches:
+        raise HTTPException(status_code=404, detail="No potential matches found")
+
+    return potential_matches
