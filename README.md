@@ -27,7 +27,7 @@ The Marriage Matchmaking App is a simple backend application designed to help us
   - Added validation to ensure the email field in user profiles contains valid email addresses.
   - Implemented this feature using the pylint library.
 
-------------------**Additional Functionality (felt it might be needed based on project business value)**-------------------------------
+-------------**Additional Functionality (felt it might be needed based on project business value)**-------------------
 
 ### **4. Match Users Based on User Preferences**
 **Endpoint:** `POST /users/{user_id}/matches`
